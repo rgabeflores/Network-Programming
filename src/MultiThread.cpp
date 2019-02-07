@@ -15,25 +15,18 @@ using namespace std;
 
 pthread_t threads[NUM_THREADS];
 
+// Global Matrices
 int matrixA[3][3];
 int matrixB[3][3];
 int result[3][3];
 
 /*
 	
+	Matrix Multiplication
+
 	a00, a01, a02     b00, b01, b02     (a00b00 + a01b10 + a02b20), (a00b01 + a01b11 + a02b21), (a00b02 + a01b12 + a02b22)
 	a10, a11, a12  x  b10, b11, b12  =  (a10b00 + a11b10 + a12b20), (a10b01 + a11b11 + a12b21), (a10b02 + a11b12 + a12b22)
 	a20, a21, a22     b20, b21, b22     (a20b00 + a21b10 + a22b20), (a20b01 + a21b11 + a22b21), (a20b02 + a21b12 + a22b22)
-
-
-	30 36 42 
-	66 81 96 
-	102 126 150 
-
-	36 42 48
-	81 96 111
-	126 150 174
-
 
 */
 
@@ -46,18 +39,18 @@ struct arg_struct{
 	Computes the value of multiplying two matrices 
 */
 void *matrix_mult(void *arguments) {
-	int xR, yR;
+	int x, y;
 	struct arg_struct *args = (struct arg_struct *) arguments;
 	
-	xR = args->arg1;
-	yR = args->arg2;
+	x = args->arg1;
+	y = args->arg2;
 
 	// Initialize value in result
-	result[xR][yR] = 0;
+	result[x][y] = 0;
 
 	int i;
 	for(i = 0; i < 3; i++){
-   		result[xR][yR] += matrixA[xR][i] * matrixB[i][yR];
+   		result[x][y] += matrixA[x][i] * matrixB[i][y];
 	}
 
 	pthread_exit(NULL);
@@ -100,7 +93,6 @@ void *fillMatrices(int argc, char *argv[]){
 		int1 = atoi(element1.c_str());
 		int2 = atoi(element2.c_str());
 
-		
 		matrixA[i][j] = int1;
 		matrixB[i][j] = int2;
 		
@@ -116,6 +108,8 @@ void *fillMatrices(int argc, char *argv[]){
 	Creates the threads for the matrix_mult function.
 */
 void *createThreads(){
+	// args is an args_struct that is used to pass multiple arguments to 
+	// the target function of a thread i.e. (x,y) matrix indices 
 	struct arg_struct args;
 
 	int i;
@@ -165,7 +159,7 @@ int main (int argc, char *argv[]) {
 	displayResult();
     
 	pthread_exit(NULL);
-	
+
 	return 0;
 }
 
