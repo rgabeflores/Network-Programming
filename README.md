@@ -25,4 +25,4 @@ A series of __C__ & __C++__ projects involving __network programming__ and __dis
 ## Contributors
 
 * [Gabriel Flores](https://github.com/rgabeflores)
-* [Hayden Matheus](https://github.com/)
+* [Hayden Matheus](https://github.com/MCSReverb)
