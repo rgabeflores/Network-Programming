@@ -12,8 +12,8 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in address; 
 	int sock = 0, valread; 
 	struct sockaddr_in serv_addr; 
-	char message[100]; 
-	char buffer[2048] = {0}; 
+	char message[100]; // Used for message to send to server
+	char buffer[2048] = {0}; // Used for response message from server
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{ 
 		printf("\n Socket creation error \n"); 
@@ -38,9 +38,11 @@ int main(int argc, char const *argv[])
 		return -1; 
 	}
 	while(1){
+		// Continuously wait for user input to send as message to server
 		if(fgets(message,100,stdin)){
 			send(sock , message , strlen(message) , 0 );
 			printf("You: %s\n", message);
+			// Look for response from server
 			valread = read( sock , buffer, 2048); 
 			printf("Server: %s\n",buffer ); 
 		}

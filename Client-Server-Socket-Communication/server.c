@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
 	int opt = 1; 
 	int addrlen = sizeof(address); 
 	char buffer[1024] = {0}; 
-	char *hello = "Hello from server"; 
+	char *hello = "Hello from server"; // Default response message
 	
 	// Creating socket file descriptor 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
@@ -51,10 +51,11 @@ int main(int argc, char const *argv[])
 		perror("accept"); 
 		exit(EXIT_FAILURE); 
 	} 
-	//valread = read( new_socket , buffer, 1024);
 	while(1){
+		// Continuously listen to socket for message
 		if(valread = read( new_socket , buffer, 1024)){
 			printf("Client: %s\n",buffer ); 
+			// Send a verification response
 			send(new_socket , hello , strlen(hello) , 0 );
 			printf("You: %s\n", hello); 
 		}
