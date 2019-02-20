@@ -1,11 +1,26 @@
-GCC = gcc
+CC1=gcc
 
-all: server.c client.c
-	$(GCC) -o server server.c
-	$(GCC) -o client client.c
+CFLAGS = -g -c -Wall
+#CFLAGS = -ansi -c -Wall -pedantic
+all: Client Server
 
-server: server.c
-	$(GCC) -o server server.c
+A = Client.o
+B = Server.o
 
-client: client.c
-	$(GCC) -o client client.c
+Client: $A
+	$(CC1) -o Client $A
+
+Client.o: Client.c
+	$(CC1) -c Client.c
+
+Server: $B
+	$(CC1) -o Server $B
+
+Server.o: Server.c
+	$(CC1) -c Server.c
+
+clean:
+	rm *.o
+	rm Server
+	rm Client
+
