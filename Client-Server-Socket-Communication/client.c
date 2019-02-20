@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in address; 
 	int sock = 0, valread; 
 	struct sockaddr_in serv_addr; 
-	char message[100]; // Used for message to send to server
+	char message[1024]; // Used for message to send to server
 	char buffer[2048] = {0}; // Used for response message from server
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{ 
