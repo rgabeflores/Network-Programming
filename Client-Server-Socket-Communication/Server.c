@@ -8,6 +8,10 @@
 
 #define PORT 8080
 
+/**
+	This is a server that accepts TCP messages.
+*/
+
 int main(int argc, char const *argv[]) 
 { 
 	int server_fd, new_socket, valread; 

@@ -3,7 +3,7 @@ CC1=gcc
 CFLAGS = -g -c -Wall
 #CFLAGS = -ansi -c -Wall -pedantic
 all: Client Server
-
+	
 A = Client.o
 B = Server.o
 

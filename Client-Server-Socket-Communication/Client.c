@@ -7,6 +7,10 @@
 
 #define PORT 8080 
 
+/**
+	This is a client for sending TCP messages to a server.
+*/
+
 int main(int argc, char const *argv[]) 
 { 
 	struct sockaddr_in address; 
@@ -39,13 +43,13 @@ int main(int argc, char const *argv[])
 		printf("\nConnection Failed \n"); 
 		return -1; 
 	}
+	printf("Type something to send a message:\n");
 	while(1){
 		if(fgets(message,100,stdin)){
 			send(sock , message , strlen(message) , 0 );
 			printf("You: %s\n", message);
-			valread = read( sock , buffer, 2048); 
-			printf("Server: %s\n",buffer ); 
 		}
+		if(read( sock , buffer, 2048)) printf("Server: %s\n",buffer );
 	}
 	return 0; 
 }
