@@ -5,7 +5,13 @@
 #include <stdlib.h> 
 #include <netinet/in.h> 
 #include <string.h> 
-#define PORT 8080 
+
+#define PORT 8080
+
+/**
+	This is a server that accepts TCP messages.
+*/
+
 int main(int argc, char const *argv[]) 
 { 
 	int server_fd, new_socket, valread; 
@@ -23,8 +29,7 @@ int main(int argc, char const *argv[])
 	} 
 	
 	// Forcefully attaching socket to the port 8080 
-	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-												&opt, sizeof(opt))) 
+	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
 	{ 
 		perror("setsockopt"); 
 		exit(EXIT_FAILURE); 
@@ -34,8 +39,7 @@ int main(int argc, char const *argv[])
 	address.sin_port = htons( PORT ); 
 	
 	// Forcefully attaching socket to the port 8080 
-	if (bind(server_fd, (struct sockaddr *)&address, 
-								sizeof(address))<0) 
+	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) 
 	{ 
 		perror("bind failed"); 
 		exit(EXIT_FAILURE); 
@@ -50,14 +54,15 @@ int main(int argc, char const *argv[])
 	{ 
 		perror("accept"); 
 		exit(EXIT_FAILURE); 
+	} 
+	//valread = read( new_socket , buffer, 1024);
+	while(1){
+		if(valread = read( new_socket , buffer, 1024)){
+			printf("Client: %s\n",buffer ); 
+			send(new_socket , hello , strlen(hello) , 0 );
+			printf("You: %s\n", hello); 
+		}
 	}
 	
-	while(1){ 
-	if(valread = read( new_socket , buffer, 1024)){ 
-	printf("CLient: %s\n",buffer ); 
-	send(new_socket , hello , strlen(hello) , 0 ); 
-	printf("You: %s\n",hello);
-	}
-	} 
 	return 0; 
 } 
