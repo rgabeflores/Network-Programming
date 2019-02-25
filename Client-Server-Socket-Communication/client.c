@@ -6,28 +6,34 @@
 #include <string.h> 
 #define PORT 8080 
 
-int exitFunc(char* input1, char* input2){
 
+//This function checks if input1 matches the exitChar string.
+//Return: 0 if message matches exitChar
+int exitFunc(char* input1, char* input2){
 int c = -4;
-for(int i = 0;i<4;i++){
-if(input1[i] == input2[i]){
-c++;
-}
+	for(int i = 0;i<4;i++){
+		if(input1[i] == input2[i]){
+		c++;
+	}
 }
 return c;
 }
+
+/**
+	This is a client for sending TCP messages to a server.
+*/
 
 int main(int argc, char const *argv[]) 
 { 
 	struct sockaddr_in address; 
 	int sock = 0, valread; 
 	struct sockaddr_in serv_addr; 
-	//char *hello = "Hello from client";
+
 	int exit = 0;
-	int comparison = 10;
-	char exitChar[1024] = "exit"; 
-	char message[1024];
-	char buffer[2048] = {0}; 
+
+	char exitChar[1024] = "exit"; // Used to check input message
+	char message[1024]; // Used for message to send to server
+	char buffer[2048] = {0}; // Used for response message from server
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{ 
 		printf("\n Socket creation error \n"); 
@@ -53,27 +59,20 @@ int main(int argc, char const *argv[])
 	}
 	while(exit == 0){ 
 
-	//printf(exitChar);
-	//printf("\n");	
-
 	printf("Type 'exit' to exit");
 	printf("\n");
+
 	if(fgets(message,100,stdin)){
+		if(exitFunc(message,exitChar) == 0){ //Client closes after exit string is inputted
+		printf("Exiting... \n");
+		return 0;
+		}
+		send(sock , message , strlen(message) , 0 );
+		printf("You: %s\n", message);
+		}
+	if(read( sock , buffer, 2048)) printf("Server: %s\n",buffer );
+
 	
-	//printf(message);
-	//printf("\n");
-
-	if(exitFunc(message,exitChar) == 0){
-	printf("Exiting... \n");
-	return 0;
-	}	
-
-	send(sock , message , strlen(message) , 0 ); 
-	printf("You: %s\n", message); 
-	valread = read( sock , buffer, 1024); 
-	printf("Server: %s\n",buffer ); 
-
-	}
 	}
 	return 0; 
 }
