@@ -12,14 +12,14 @@
 	This is a server that accepts TCP messages.
 */
 
-int main(int argc, char const *argv[]) 
-{ 
+int main(int argc, char const *argv[]) { 
 	int server_fd, new_socket, valread; 
 	struct sockaddr_in address; 
 	int opt = 1; 
 	int addrlen = sizeof(address); 
+
 	char buffer[1024] = {0}; 
-	char *hello = "Hello from server"; 
+	char *hello = "Hello from server"; // Sample confirmation message from server
 	
 	// Creating socket file descriptor 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
@@ -50,12 +50,11 @@ int main(int argc, char const *argv[])
 		exit(EXIT_FAILURE); 
 	} 
 	if ((new_socket = accept(server_fd, (struct sockaddr *)&address, 
-					(socklen_t*)&addrlen))<0) 
-	{ 
+					(socklen_t*)&addrlen))<0){ 
 		perror("accept"); 
 		exit(EXIT_FAILURE); 
 	} 
-	//valread = read( new_socket , buffer, 1024);
+
 	while(1){
 		if(valread = read( new_socket , buffer, 1024)){
 			printf("Client: %s\n",buffer ); 
