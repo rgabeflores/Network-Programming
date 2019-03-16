@@ -1,6 +1,6 @@
-# Network Programming
+# Threaded Matrix Multiplication
 
-A series of __C__ & __C++__ projects involving __network programming__ and __distributed computing__.
+Threading is often used in network computing to minimize latencies. This project demonstrates matrix multiplication 
 
 > These projects are from the Networks & Distributed Computing course at California State University, Long Beach. Some features may not yet be fully implemented.
 
@@ -14,13 +14,25 @@ A series of __C__ & __C++__ projects involving __network programming__ and __dis
 
 > NOTE: Most of the projects are written for POSIX systems, thus requiring a POSIX based OS for compilation.
 
-## List of Modules
-* `/Threaded-Matrix-Multiplication` 
-	* Matrix multiplication made faster with threads in C++
-* `/Client-Server-Socket-Communication` 
-	* Client-server communication model through socket programming in C
+## Running the Program
 
-> NOTE: These projects are based on a university course. New projects will be added throughout the course's duration.
+1. Open a terminal in the project folder.
+
+2. Create two files containing the matrices values with the following format:
+
+
+```
+	1 2 3
+	4 5 6
+	7 8 9
+```
+
+3. Call the `Aprog` executable with the proper arguments using the following command:
+
+```
+	./Aprog inputA1.in inputA2.in
+```
+
 
 ## Contributors
 

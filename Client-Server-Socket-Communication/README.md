@@ -1,6 +1,6 @@
-# Network Programming
+# Client-Server Socket Communication
 
-A series of __C__ & __C++__ projects involving __network programming__ and __distributed computing__.
+This project is a simple demonstration of the networking client-server model in interconnected computing.
 
 > These projects are from the Networks & Distributed Computing course at California State University, Long Beach. Some features may not yet be fully implemented.
 
@@ -14,13 +14,15 @@ A series of __C__ & __C++__ projects involving __network programming__ and __dis
 
 > NOTE: Most of the projects are written for POSIX systems, thus requiring a POSIX based OS for compilation.
 
-## List of Modules
-* `/Threaded-Matrix-Multiplication` 
-	* Matrix multiplication made faster with threads in C++
-* `/Client-Server-Socket-Communication` 
-	* Client-server communication model through socket programming in C
+## Running the Program
 
-> NOTE: These projects are based on a university course. New projects will be added throughout the course's duration.
+1. Open a terminal in the project folder.
+
+2. Run the compiled server code by calling the `Server` executable.
+
+3. Open an additionatl terminal in the project folder.
+
+4. Run the compiled client code by calling the `Client` executable.
 
 ## Contributors
 
