@@ -123,7 +123,7 @@ public:
   char* send_message(const char* message);
   char* newQuestion(const char* question, const char* answer);
   char* getRandomQuestion();
-  char* answerQuestion(const char* answer);
+  char* answerQuestion(const char* question, const char* answer);
   char* removeQuestion(::CORBA::Short index);
   char* displayAllQuestions();
 
@@ -163,7 +163,7 @@ public:
   virtual char* send_message(const char* message) = 0;
   virtual char* newQuestion(const char* question, const char* answer) = 0;
   virtual char* getRandomQuestion() = 0;
-  virtual char* answerQuestion(const char* answer) = 0;
+  virtual char* answerQuestion(const char* question, const char* answer) = 0;
   virtual char* removeQuestion(::CORBA::Short index) = 0;
   virtual char* displayAllQuestions() = 0;
   

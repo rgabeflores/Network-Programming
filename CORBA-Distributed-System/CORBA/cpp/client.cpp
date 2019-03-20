@@ -69,19 +69,15 @@ int main(int argc, char ** argv)
 		// Do stuff
 		//------------------------------------------------------------------------
 
-
-		string DISPLAY_RESPONSE = "response from Server:\n\n";
-
-
-
-
 		if (!CORBA::is_nil(service_server)) {
-			char * server = service_server->send_message("Message from C++ (omniORB) client");
-			cout << DISPLAY_RESPONSE << server << endl;
+			string DISPLAY_RESPONSE = "Response from Server:\n";
 
-			server = service_server->getRandomQuestion();
-			cout << DISPLAY_RESPONSE << server << endl << endl;			
-	
+			// Holds responses from server
+			char * server;
+
+
+
+
 			string q, a;
 			int i;
 			for(i = 0; i < NUM_QUESTIONS; i++){
@@ -99,11 +95,44 @@ int main(int argc, char ** argv)
 
 			}
 
-			server = service_server->getRandomQuestion();
-			cout << DISPLAY_RESPONSE << server << endl;
 
-			server = service_server->displayAllQuestions();
-			cout << DISPLAY_RESPONSE << server << endl;
+			int choice = -1;
+			while(!(choice >= 1 && choice <= 3)){
+				cout << endl;
+				cout << "Please choose from menu items:" << endl;
+				cout << "1. Ask me a question" << endl;
+				cout << "2. Remove a question" << endl;
+				cout << "3. Exit" << endl;
+				cin >> choice;
+				cin.clear();
+				cin.ignore(100, '\n');
+			}
+
+
+			if(choice == 1){
+				// Get a question
+				server = service_server->getRandomQuestion();
+				cout << DISPLAY_RESPONSE << server << endl;
+
+				// Get answer
+				string answer;
+				cout << "What is your answer?" << endl;
+				getline(cin, answer);
+				server = service_server->answerQuestion(server, answer.c_str());
+				cout << DISPLAY_RESPONSE << server << endl;
+			}
+			else if (choice == 2){
+				int n;
+
+				cout << "Enter the number of the question to remove:" << endl;
+				cin >> n;
+				
+				server = service_server->removeQuestion(n);
+				cout << DISPLAY_RESPONSE << server << endl;
+
+			}
+			else{
+			}
 
 			CORBA::string_free(server);
 		}

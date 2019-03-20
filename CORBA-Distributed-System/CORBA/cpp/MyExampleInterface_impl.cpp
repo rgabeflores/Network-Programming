@@ -44,30 +44,68 @@ char * MyExampleInterface_impl::newQuestion(const char * question, const char * 
 */
 char * MyExampleInterface_impl::getRandomQuestion()
 {
-	// Generate random integer for index
-	int i = rand() % questions.size();
+	const char * response;
+	// Ensure there are questions saved
+	int size = questions.size();
+	if(size > 0){
+		// Generate random integer for index
+		int i = rand() % size;
 
-	// Access item and assign to response
-	const char * question = questions[i].c_str();
+		// Access item and assign to response
+		response = questions[i].c_str();
+	}
+	else{
+		response = "There are no questions saved.";
+	}
 
 	// Response message to client
 	char * server = CORBA::string_alloc(1024);
-	strncpy(server, question, 1024);
+	strncpy(server, response, 1024);
 	return server;
 }
 
-char * MyExampleInterface_impl::answerQuestion(const char * answer)
+/**
+	Checks the answer to the question.
+*/
+char * MyExampleInterface_impl::answerQuestion(const char * question, const char * answer)
 {
-	cout << "C++ (omniORB) server: " << "Enter a question" << endl;
+	string response = "An entry could not be found."; // Default response
+
+	// Loop through each vector to compare to the correct question/answer pair
+	string targetQ = string(question), targetA = string(answer);
+	int i, size = questions.size();
+	for(i = 0; i < size; i++){
+		if(questions[i] == targetQ){
+			if(answers[i] == targetA){
+				response = "Correct!";
+			}
+			else{
+				response = "Incorrect...";
+			}
+		}
+	}
+
+	// Response message to client
+	char * server = CORBA::string_alloc(1024);
+	strncpy(server, response.c_str(), 1024);
+	return server;
 }
 
 /**
-	
+	Removes a specified question.
 */
 char * MyExampleInterface_impl::removeQuestion(short index)
 {
-	questions.erase(questions.begin() + index - 1);
-	string response = "Question " + to_string(index) + " removed.";
+	string response;
+
+	if(index < questions.size() && index < answers.size()){
+		questions.erase(questions.begin() + index);
+		answers.erase(answers.begin() + index);
+		response = "Question " + to_string(index) + " removed.";
+	}
+	else{
+		response = "There weren't that many questions...";
+	}
 
 	// Response message to client
 	char * server = CORBA::string_alloc(1024);
@@ -81,10 +119,13 @@ char * MyExampleInterface_impl::displayAllQuestions()
 	// Initialize response message
 	string response = "\n";
 
-	// Iterate through questions/answers vectors and append to response message
-	int i;
-	for(i = 0; i < questions.size();i++){
-		response += "Q" + to_string(i) + ": " + questions[i] + "\nA" + to_string(i) + ": " + answers[i] + "\n\n";
+	// Check size of questions
+	int i, size = questions.size();
+	if(size > 0){
+		// Iterate through questions/answers vectors and append to response message
+		for(i = 0; i < size;i++){
+			response += "Q" + to_string(i) + ": " + questions[i] + "\nA" + to_string(i) + ": " + answers[i] + "\n\n";
+		}
 	}
 
 	// Construct CORBA friendly return message

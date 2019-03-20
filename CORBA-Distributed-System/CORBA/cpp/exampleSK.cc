@@ -357,17 +357,18 @@ char* _objref_ExampleInterface::getRandomQuestion()
 static void
 _0RL_lcfn_3c91a63531055fbe_60000000(omniCallDescriptor* cd, omniServant* svnt)
 {
-  _0RL_cd_3c91a63531055fbe_00000000* tcd = (_0RL_cd_3c91a63531055fbe_00000000*)cd;
+  _0RL_cd_3c91a63531055fbe_20000000* tcd = (_0RL_cd_3c91a63531055fbe_20000000*)cd;
   _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
-  tcd->result = impl->answerQuestion(tcd->arg_0);
+  tcd->result = impl->answerQuestion(tcd->arg_0, tcd->arg_1);
 
 
 }
 
-char* _objref_ExampleInterface::answerQuestion(const char* answer)
+char* _objref_ExampleInterface::answerQuestion(const char* question, const char* answer)
 {
-  _0RL_cd_3c91a63531055fbe_00000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15);
-  _call_desc.arg_0 = answer;
+  _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15);
+  _call_desc.arg_0 = question;
+  _call_desc.arg_1 = answer;
 
   _invoke(_call_desc);
   return _call_desc.result._retn();
@@ -535,7 +536,7 @@ _impl_ExampleInterface::_dispatch(omniCallHandle& _handle)
 
   if (omni::strMatch(op, "answerQuestion")) {
 
-    _0RL_cd_3c91a63531055fbe_00000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15, 1);
+    _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
