@@ -200,10 +200,10 @@ char* _objref_ExampleInterface::send_message(const char* message)
 
 
 //
-// Code for ExampleInterface::displayAllQuestions
+// Code for ExampleInterface::newQuestion
 
 // Proxy call descriptor class. Mangled signature:
-//  _cstring
+//  _cstring_i_cstring_i_cstring
 class _0RL_cd_3c91a63531055fbe_20000000
   : public omniCallDescriptor
 {
@@ -214,15 +214,37 @@ public:
     
   }
   
-  
+  void marshalArguments(cdrStream&);
+  void unmarshalArguments(cdrStream&);
+
   void unmarshalReturnedValues(cdrStream&);
   void marshalReturnedValues(cdrStream&);
   
   
   static const char* const _user_exns[];
 
+  ::CORBA::String_var arg_0_;
+  const char* arg_0;
+  ::CORBA::String_var arg_1_;
+  const char* arg_1;
   ::CORBA::String_var result;
 };
+
+void _0RL_cd_3c91a63531055fbe_20000000::marshalArguments(cdrStream& _n)
+{
+  _n.marshalString(arg_0,0);
+  _n.marshalString(arg_1,0);
+
+}
+
+void _0RL_cd_3c91a63531055fbe_20000000::unmarshalArguments(cdrStream& _n)
+{
+  arg_0_ = _n.unmarshalString(0);
+  arg_0 = arg_0_.in();
+  arg_1_ = _n.unmarshalString(0);
+  arg_1 = arg_1_.in();
+
+}
 
 void _0RL_cd_3c91a63531055fbe_20000000::marshalReturnedValues(cdrStream& _n)
 {
@@ -246,6 +268,202 @@ _0RL_lcfn_3c91a63531055fbe_30000000(omniCallDescriptor* cd, omniServant* svnt)
 {
   _0RL_cd_3c91a63531055fbe_20000000* tcd = (_0RL_cd_3c91a63531055fbe_20000000*)cd;
   _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
+  tcd->result = impl->newQuestion(tcd->arg_0, tcd->arg_1);
+
+
+}
+
+char* _objref_ExampleInterface::newQuestion(const char* question, const char* answer)
+{
+  _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "newQuestion", 12);
+  _call_desc.arg_0 = question;
+  _call_desc.arg_1 = answer;
+
+  _invoke(_call_desc);
+  return _call_desc.result._retn();
+
+
+}
+
+
+//
+// Code for ExampleInterface::getRandomQuestion
+
+// Proxy call descriptor class. Mangled signature:
+//  _cstring
+class _0RL_cd_3c91a63531055fbe_40000000
+  : public omniCallDescriptor
+{
+public:
+  inline _0RL_cd_3c91a63531055fbe_40000000(LocalCallFn lcfn, const char* op_, size_t oplen, _CORBA_Boolean upcall=0)
+    : omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
+  {
+    
+  }
+  
+  
+  void unmarshalReturnedValues(cdrStream&);
+  void marshalReturnedValues(cdrStream&);
+  
+  
+  static const char* const _user_exns[];
+
+  ::CORBA::String_var result;
+};
+
+void _0RL_cd_3c91a63531055fbe_40000000::marshalReturnedValues(cdrStream& _n)
+{
+  _n.marshalString(result,0);
+
+}
+
+void _0RL_cd_3c91a63531055fbe_40000000::unmarshalReturnedValues(cdrStream& _n)
+{
+  result = _n.unmarshalString(0);
+
+}
+
+const char* const _0RL_cd_3c91a63531055fbe_40000000::_user_exns[] = {
+  0
+};
+
+// Local call call-back function.
+static void
+_0RL_lcfn_3c91a63531055fbe_50000000(omniCallDescriptor* cd, omniServant* svnt)
+{
+  _0RL_cd_3c91a63531055fbe_40000000* tcd = (_0RL_cd_3c91a63531055fbe_40000000*)cd;
+  _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
+  tcd->result = impl->getRandomQuestion();
+
+
+}
+
+char* _objref_ExampleInterface::getRandomQuestion()
+{
+  _0RL_cd_3c91a63531055fbe_40000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_50000000, "getRandomQuestion", 18);
+
+
+  _invoke(_call_desc);
+  return _call_desc.result._retn();
+
+
+}
+
+
+//
+// Code for ExampleInterface::answerQuestion
+
+// Local call call-back function.
+static void
+_0RL_lcfn_3c91a63531055fbe_60000000(omniCallDescriptor* cd, omniServant* svnt)
+{
+  _0RL_cd_3c91a63531055fbe_00000000* tcd = (_0RL_cd_3c91a63531055fbe_00000000*)cd;
+  _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
+  tcd->result = impl->answerQuestion(tcd->arg_0);
+
+
+}
+
+char* _objref_ExampleInterface::answerQuestion(const char* answer)
+{
+  _0RL_cd_3c91a63531055fbe_00000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15);
+  _call_desc.arg_0 = answer;
+
+  _invoke(_call_desc);
+  return _call_desc.result._retn();
+
+
+}
+
+
+//
+// Code for ExampleInterface::removeQuestion
+
+// Proxy call descriptor class. Mangled signature:
+//  _cstring_i_cshort
+class _0RL_cd_3c91a63531055fbe_70000000
+  : public omniCallDescriptor
+{
+public:
+  inline _0RL_cd_3c91a63531055fbe_70000000(LocalCallFn lcfn, const char* op_, size_t oplen, _CORBA_Boolean upcall=0)
+    : omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
+  {
+    
+  }
+  
+  void marshalArguments(cdrStream&);
+  void unmarshalArguments(cdrStream&);
+
+  void unmarshalReturnedValues(cdrStream&);
+  void marshalReturnedValues(cdrStream&);
+  
+  
+  static const char* const _user_exns[];
+
+  ::CORBA::Short arg_0;
+  ::CORBA::String_var result;
+};
+
+void _0RL_cd_3c91a63531055fbe_70000000::marshalArguments(cdrStream& _n)
+{
+  arg_0 >>= _n;
+
+}
+
+void _0RL_cd_3c91a63531055fbe_70000000::unmarshalArguments(cdrStream& _n)
+{
+  (::CORBA::Short&)arg_0 <<= _n;
+
+}
+
+void _0RL_cd_3c91a63531055fbe_70000000::marshalReturnedValues(cdrStream& _n)
+{
+  _n.marshalString(result,0);
+
+}
+
+void _0RL_cd_3c91a63531055fbe_70000000::unmarshalReturnedValues(cdrStream& _n)
+{
+  result = _n.unmarshalString(0);
+
+}
+
+const char* const _0RL_cd_3c91a63531055fbe_70000000::_user_exns[] = {
+  0
+};
+
+// Local call call-back function.
+static void
+_0RL_lcfn_3c91a63531055fbe_80000000(omniCallDescriptor* cd, omniServant* svnt)
+{
+  _0RL_cd_3c91a63531055fbe_70000000* tcd = (_0RL_cd_3c91a63531055fbe_70000000*)cd;
+  _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
+  tcd->result = impl->removeQuestion(tcd->arg_0);
+
+
+}
+
+char* _objref_ExampleInterface::removeQuestion(::CORBA::Short index)
+{
+  _0RL_cd_3c91a63531055fbe_70000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_80000000, "removeQuestion", 15);
+  _call_desc.arg_0 = index;
+
+  _invoke(_call_desc);
+  return _call_desc.result._retn();
+
+
+}
+
+
+//
+// Code for ExampleInterface::displayAllQuestions
+
+// Local call call-back function.
+static void
+_0RL_lcfn_3c91a63531055fbe_90000000(omniCallDescriptor* cd, omniServant* svnt)
+{
+  _0RL_cd_3c91a63531055fbe_40000000* tcd = (_0RL_cd_3c91a63531055fbe_40000000*)cd;
+  _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
   tcd->result = impl->displayAllQuestions();
 
 
@@ -253,7 +471,7 @@ _0RL_lcfn_3c91a63531055fbe_30000000(omniCallDescriptor* cd, omniServant* svnt)
 
 char* _objref_ExampleInterface::displayAllQuestions()
 {
-  _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "displayAllQuestions", 20);
+  _0RL_cd_3c91a63531055fbe_40000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_90000000, "displayAllQuestions", 20);
 
 
   _invoke(_call_desc);
@@ -299,9 +517,41 @@ _impl_ExampleInterface::_dispatch(omniCallHandle& _handle)
     return 1;
   }
 
+  if (omni::strMatch(op, "newQuestion")) {
+
+    _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "newQuestion", 12, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
+  if (omni::strMatch(op, "getRandomQuestion")) {
+
+    _0RL_cd_3c91a63531055fbe_40000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_50000000, "getRandomQuestion", 18, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
+  if (omni::strMatch(op, "answerQuestion")) {
+
+    _0RL_cd_3c91a63531055fbe_00000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_60000000, "answerQuestion", 15, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
+  if (omni::strMatch(op, "removeQuestion")) {
+
+    _0RL_cd_3c91a63531055fbe_70000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_80000000, "removeQuestion", 15, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
   if (omni::strMatch(op, "displayAllQuestions")) {
 
-    _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "displayAllQuestions", 20, 1);
+    _0RL_cd_3c91a63531055fbe_40000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_90000000, "displayAllQuestions", 20, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;

@@ -1,10 +1,12 @@
 #include "example.hh"
 #include <iostream>
+#include <string>
 #include <CORBA.h>
 #include <Naming.hh>
 
 /** Name is defined in the server.cpp */
 #define SERVER_NAME		"MyServerName"
+#define NUM_QUESTIONS 3
 
 using namespace std;
 
@@ -63,29 +65,45 @@ int main(int argc, char ** argv)
 			cerr << "Caught corba cannot proceed" << endl;
 		}
 
-
-
-
-		
-
-
 		//------------------------------------------------------------------------
 		// Do stuff
 		//------------------------------------------------------------------------
 
 
-
-
+		string DISPLAY_RESPONSE = "response from Server:\n\n";
 
 
 
 
 		if (!CORBA::is_nil(service_server)) {
 			char * server = service_server->send_message("Message from C++ (omniORB) client");
-			cout << "response from Server: " << server << endl;
-			
+			cout << DISPLAY_RESPONSE << server << endl;
+
+			server = service_server->getRandomQuestion();
+			cout << DISPLAY_RESPONSE << server << endl << endl;			
+	
+			string q, a;
+			int i;
+			for(i = 0; i < NUM_QUESTIONS; i++){
+				
+				cout << "Enter a question: " << endl;
+				getline(cin, q);
+				cout << "Enter the answer: " << endl;
+				getline(cin, a);
+
+				const char * question = q.c_str();
+				const char * answer = a.c_str();
+
+				server = service_server->newQuestion(question, answer);
+				cout << DISPLAY_RESPONSE << server << endl;
+
+			}
+
+			server = service_server->getRandomQuestion();
+			cout << DISPLAY_RESPONSE << server << endl;
+
 			server = service_server->displayAllQuestions();
-			cout << "response from Server: " << server << endl;
+			cout << DISPLAY_RESPONSE << server << endl;
 
 			CORBA::string_free(server);
 		}

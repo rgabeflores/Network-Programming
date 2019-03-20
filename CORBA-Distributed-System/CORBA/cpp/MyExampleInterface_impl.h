@@ -14,8 +14,9 @@ class MyExampleInterface_impl : public POA_ExampleInterface
 		vector<string> answers;
 		virtual char * send_message(const char * message);
 		virtual char * newQuestion(const char * question, const char * answer);
-		virtual char * askQuestion();
-		virtual void removeQuestion();
+		virtual char * getRandomQuestion();
+		virtual char * answerQuestion(const char * answer);
+		virtual char * removeQuestion(short index);
 		virtual char * displayAllQuestions();		
 		virtual void displayAll();
 };
