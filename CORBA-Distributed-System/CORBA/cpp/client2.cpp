@@ -67,7 +67,10 @@ int main(int argc, char ** argv)
 		// Do stuff
 		//------------------------------------------------------------------------
 		if (!CORBA::is_nil(service_server)) {
-			service_server->displayAll();
+			char * server = service_server->displayAllQuestions();
+			
+			cout <<  server << endl;
+			CORBA::string_free(server);
 		}
 
 		//------------------------------------------------------------------------
