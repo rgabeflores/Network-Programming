@@ -1,4 +1,6 @@
 interface ExampleInterface
 {
 	string send_message(in string message);
+	string newQuestion(in string question, in string answer);
+	string displayAllQuestions();
 };

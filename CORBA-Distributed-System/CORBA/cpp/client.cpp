@@ -63,14 +63,51 @@ int main(int argc, char ** argv)
 			cerr << "Caught corba cannot proceed" << endl;
 		}
 
+
+
+
+		
+
+
 		//------------------------------------------------------------------------
 		// Do stuff
 		//------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 		if (!CORBA::is_nil(service_server)) {
 			char * server = service_server->send_message("Message from C++ (omniORB) client");
 			cout << "response from Server: " << server << endl;
+			
+			server = service_server->displayAllQuestions();
+			cout << "response from Server: " << server << endl;
+
 			CORBA::string_free(server);
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		//------------------------------------------------------------------------
 		// Destroy OBR

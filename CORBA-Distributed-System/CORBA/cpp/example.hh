@@ -121,6 +121,7 @@ class _objref_ExampleInterface :
 public:
   // IDL operations
   char* send_message(const char* message);
+  char* displayAllQuestions();
 
   // Constructors
   inline _objref_ExampleInterface()  { _PR_setobj(0); }  // nil
@@ -156,6 +157,7 @@ public:
   virtual ~_impl_ExampleInterface();
 
   virtual char* send_message(const char* message) = 0;
+  virtual char* displayAllQuestions() = 0;
   
 public:  // Really protected, workaround for xlC
   virtual _CORBA_Boolean _dispatch(omniCallHandle&);

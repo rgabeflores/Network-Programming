@@ -1,5 +1,6 @@
 #include "MyExampleInterface_impl.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -33,15 +34,35 @@ void MyExampleInterface_impl::removeQuestion()
 	cout << "Enter the question number of the question to remove" << endl;
 	cin>>input;
 	input = input - 1;
-	questions.erase(input);
+	// questions.erase(input);
 	cout << "Question at index: " << input << " deleted."<<endl;
 }
 
-void MyExampleInterface_impl::displayAllQuestions()
+char * MyExampleInterface_impl::displayAllQuestions()
 {
+	// Sample Questions
+	questions.push_back("Hello1");
+	questions.push_back("Hello2");
+	questions.push_back("Hello3");
+	// Sample Answers
+	answers.push_back("Hey1");
+	answers.push_back("Hey2");
+	answers.push_back("Hey3");
+
+	// Initialize response message
+	string response = "\n";
+
+	// Iterate through questions/answers vectors and append to response message
 	for(int i = 0; i<questions.size();i++){
-		cout << "Question " << i << ": " << questions[i]<< endl;
+		response += "Q" + to_string(i) + ": " + questions[i] + "\nA" + to_string(i) + ": " + answers[i] + "\n\n";
 	}
+
+	// Construct CORBA friendly return message
+	char * server = CORBA::string_alloc(1024);
+	// Convert response to (char *) and set to server
+	strncpy(server, response.c_str(), 1024); 
+
+	return server;
 }
 
 void MyExampleInterface_impl::displayAll()

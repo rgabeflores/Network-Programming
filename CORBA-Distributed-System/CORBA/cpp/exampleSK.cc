@@ -198,6 +198,70 @@ char* _objref_ExampleInterface::send_message(const char* message)
 
 }
 
+
+//
+// Code for ExampleInterface::displayAllQuestions
+
+// Proxy call descriptor class. Mangled signature:
+//  _cstring
+class _0RL_cd_3c91a63531055fbe_20000000
+  : public omniCallDescriptor
+{
+public:
+  inline _0RL_cd_3c91a63531055fbe_20000000(LocalCallFn lcfn, const char* op_, size_t oplen, _CORBA_Boolean upcall=0)
+    : omniCallDescriptor(lcfn, op_, oplen, 0, _user_exns, 0, upcall)
+  {
+    
+  }
+  
+  
+  void unmarshalReturnedValues(cdrStream&);
+  void marshalReturnedValues(cdrStream&);
+  
+  
+  static const char* const _user_exns[];
+
+  ::CORBA::String_var result;
+};
+
+void _0RL_cd_3c91a63531055fbe_20000000::marshalReturnedValues(cdrStream& _n)
+{
+  _n.marshalString(result,0);
+
+}
+
+void _0RL_cd_3c91a63531055fbe_20000000::unmarshalReturnedValues(cdrStream& _n)
+{
+  result = _n.unmarshalString(0);
+
+}
+
+const char* const _0RL_cd_3c91a63531055fbe_20000000::_user_exns[] = {
+  0
+};
+
+// Local call call-back function.
+static void
+_0RL_lcfn_3c91a63531055fbe_30000000(omniCallDescriptor* cd, omniServant* svnt)
+{
+  _0RL_cd_3c91a63531055fbe_20000000* tcd = (_0RL_cd_3c91a63531055fbe_20000000*)cd;
+  _impl_ExampleInterface* impl = (_impl_ExampleInterface*) svnt->_ptrToInterface(ExampleInterface::_PD_repoId);
+  tcd->result = impl->displayAllQuestions();
+
+
+}
+
+char* _objref_ExampleInterface::displayAllQuestions()
+{
+  _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "displayAllQuestions", 20);
+
+
+  _invoke(_call_desc);
+  return _call_desc.result._retn();
+
+
+}
+
 _pof_ExampleInterface::~_pof_ExampleInterface() {}
 
 
@@ -230,6 +294,14 @@ _impl_ExampleInterface::_dispatch(omniCallHandle& _handle)
   if (omni::strMatch(op, "send_message")) {
 
     _0RL_cd_3c91a63531055fbe_00000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_10000000, "send_message", 13, 1);
+    
+    _handle.upcall(this,_call_desc);
+    return 1;
+  }
+
+  if (omni::strMatch(op, "displayAllQuestions")) {
+
+    _0RL_cd_3c91a63531055fbe_20000000 _call_desc(_0RL_lcfn_3c91a63531055fbe_30000000, "displayAllQuestions", 20, 1);
     
     _handle.upcall(this,_call_desc);
     return 1;
