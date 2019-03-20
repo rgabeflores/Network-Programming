@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
 		}
 
 		//------------------------------------------------------------------------
-		// Do stuff
+		// Display All Questions
 		//------------------------------------------------------------------------
 		if (!CORBA::is_nil(service_server)) {
 			char * server = service_server->displayAllQuestions();
