@@ -5,9 +5,9 @@
 
 using namespace std;
 
-// ============================================================================================
+// ==================================================================================
 // These functions are defined for the server to execute when called by the client.
-// ============================================================================================
+// ==================================================================================
 
 
 /**
@@ -113,6 +113,9 @@ char * MyExampleInterface_impl::removeQuestion(short index)
 	return server;
 }
 
+/**
+	Displays the list of questions and answers
+*/
 char * MyExampleInterface_impl::displayAllQuestions()
 {
 
@@ -134,13 +137,5 @@ char * MyExampleInterface_impl::displayAllQuestions()
 	strncpy(server, response.c_str(), 1024); 
 
 	return server;
-}
-
-void MyExampleInterface_impl::displayAll()
-{
-	for(int i = 0; i<questions.size();i++){
-		cout << "Question " << i << ": " << questions[i]<< endl;
-		cout << "Answer " << i << ": " << answers[i]<< endl;
-	}
 }
 

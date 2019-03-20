@@ -18,7 +18,6 @@ class MyExampleInterface_impl : public POA_ExampleInterface
 		virtual char * answerQuestion(const char * question, const char * answer);
 		virtual char * removeQuestion(short index);
 		virtual char * displayAllQuestions();	
-		virtual void displayAll();
 };
 
 #endif // __MY_EXAMPLE_INTERFACE_IMPL_H__
