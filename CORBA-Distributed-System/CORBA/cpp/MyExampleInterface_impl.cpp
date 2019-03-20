@@ -121,7 +121,7 @@ char * MyExampleInterface_impl::displayAllQuestions()
 	int i, size = questions.size();
 	if(size > 0){
 		// Iterate through questions/answers vectors and append to response message
-		for(i = 0; i < size;i++){
+		for(i = 0; i < size; i++){
 			response += "Q" + to_string(i) + ": " + questions[i] + "\nA" + to_string(i) + ": " + answers[i] + "\n\n";
 		}
 	}

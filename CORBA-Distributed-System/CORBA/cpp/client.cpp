@@ -10,6 +10,15 @@
 
 using namespace std;
 
+
+/**
+	Displays response from server with formatting.
+*/
+void displayResponse(const char * message){
+	cout << "Response from Server: " << message;
+	cout << endl;
+}
+
 int main(int argc, char ** argv)
 {
 	try {
@@ -70,8 +79,6 @@ int main(int argc, char ** argv)
 		//------------------------------------------------------------------------
 
 		if (!CORBA::is_nil(service_server)) {
-			// Client output formatting
-			const char * DISPLAY_RESPONSE = "Response from Server:\n";
 
 			// Holds responses from server
 			char * server;
@@ -85,14 +92,17 @@ int main(int argc, char ** argv)
 				cout << "Enter the answer: " << endl;
 				getline(cin, answer);
 
+				cout << endl;
+				cout << "Sending to server..." << endl;
 				// Question submission through CORBA/IDL name service
 				server = service_server->newQuestion(question.c_str(), answer.c_str());
-				cout << DISPLAY_RESPONSE << server << endl;
+				displayResponse(server);
+				cout << endl;
 			}
 
 			// Display user options
-			int choice = -1;
-			while(!(choice >= 1 && choice <= 3)){
+			int choice = 1;
+			while(choice >= 1 && choice <= 3){
 				cout << endl;
 				cout << "Please choose from menu items:" << endl;
 				cout << "1. Ask me a question" << endl;
@@ -103,59 +113,54 @@ int main(int argc, char ** argv)
 				// Clear cin buffer
 				cin.clear();
 				cin.ignore(INT_MAX, '\n');
-			}
 
-			if(choice == 1){
-				// Get a question
-				server = service_server->getRandomQuestion();
-				cout << DISPLAY_RESPONSE << server << endl;
+				if(choice == 1){
+					// Get a question
+					server = service_server->getRandomQuestion();
 
-				// Get answer from user
-				string answer;
-				cout << "What is your answer?" << endl;
-				getline(cin, answer);
-
-				// Submit answer through CORBA/IDL name service
-				server = service_server->answerQuestion(server, answer.c_str());
-				cout << DISPLAY_RESPONSE << server << endl;
-			}
-			else if (choice == 2){
-				// Get index of question to remove from user
-				int n;
-				cout << "Enter the number of the question to remove:" << endl;
-				cin >> n;
-
-				// Clear cin buffer
-				cin.clear();
-				cin.ignore(INT_MAX, '\n');
+					// Get answer from user
+					string answer;
+					cout << endl;
+					cout << "Q: " << server << endl;				
+					cout << "A: ";
+					getline(cin, answer);
 				
-				// Request removal of question through CORBA/IDL name service
-				server = service_server->removeQuestion(n);
-				cout << DISPLAY_RESPONSE << server << endl;
+					// Submit answer through CORBA/IDL name service
+					server = service_server->answerQuestion(server, answer.c_str());
+					displayResponse(server);
+					cout << endl << endl;
+				}
+				else if (choice == 2){
+					// Get index of question to remove from user
+					int n;
+					cout << "Enter the number of the question to remove: ";
+					cin >> n;
+
+					// Clear cin buffer
+					cin.clear();
+					cin.ignore(INT_MAX, '\n');
+					
+					// Request removal of question through CORBA/IDL name service
+					server = service_server->removeQuestion(n);
+					displayResponse(server);
+				}
+				else if(choice == 3){
+					cout << endl;
+					cout << "Exiting..." << endl;
+					cout << endl;
+					break;
+				}
+				else{
+					cout << endl;
+					cout << "Invalid choice..." << endl;
+					choice = 1;
+				}
 			}
-			else{
-			}
+
+
 
 			CORBA::string_free(server);
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 		//------------------------------------------------------------------------
