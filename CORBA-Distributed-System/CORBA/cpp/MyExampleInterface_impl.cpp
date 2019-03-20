@@ -44,7 +44,8 @@ char * MyExampleInterface_impl::newQuestion(const char * question, const char * 
 */
 char * MyExampleInterface_impl::getRandomQuestion()
 {
-	const char * response;
+	const char * response = "There are no questions saved."; // Default response
+
 	// Ensure there are questions saved
 	int size = questions.size();
 	if(size > 0){
@@ -53,9 +54,6 @@ char * MyExampleInterface_impl::getRandomQuestion()
 
 		// Access item and assign to response
 		response = questions[i].c_str();
-	}
-	else{
-		response = "There are no questions saved.";
 	}
 
 	// Response message to client
@@ -96,15 +94,12 @@ char * MyExampleInterface_impl::answerQuestion(const char * question, const char
 */
 char * MyExampleInterface_impl::removeQuestion(short index)
 {
-	string response;
+	string response = "There weren't that many questions..."; // Default response
 
 	if(index < questions.size() && index < answers.size()){
 		questions.erase(questions.begin() + index);
 		answers.erase(answers.begin() + index);
 		response = "Question " + to_string(index) + " removed.";
-	}
-	else{
-		response = "There weren't that many questions...";
 	}
 
 	// Response message to client

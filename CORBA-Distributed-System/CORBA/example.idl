@@ -2,5 +2,8 @@ interface ExampleInterface
 {
 	string send_message(in string message);
 	string newQuestion(in string question, in string answer);
+	string getRandomQuestion();
+	string answerQuestion(in string question, in string answer);
+	string removeQuestion(in short index);
 	string displayAllQuestions();
 };
