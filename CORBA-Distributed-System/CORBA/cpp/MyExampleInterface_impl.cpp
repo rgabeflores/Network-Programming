@@ -10,6 +10,8 @@ using namespace std;
 // ==================================================================================
 
 
+const int RESPONSE_BUFFER_SIZE = 1024;
+
 /**
 	Sends a message
 */
@@ -57,8 +59,8 @@ char * MyExampleInterface_impl::getRandomQuestion()
 	}
 
 	// Response message to client
-	char * server = CORBA::string_alloc(1024);
-	strncpy(server, response, 1024);
+	char * server = CORBA::string_alloc(RESPONSE_BUFFER_SIZE);
+	strncpy(server, response, RESPONSE_BUFFER_SIZE);
 	return server;
 }
 
@@ -84,8 +86,8 @@ char * MyExampleInterface_impl::answerQuestion(const char * question, const char
 	}
 
 	// Response message to client
-	char * server = CORBA::string_alloc(1024);
-	strncpy(server, response.c_str(), 1024);
+	char * server = CORBA::string_alloc(RESPONSE_BUFFER_SIZE);
+	strncpy(server, response.c_str(), RESPONSE_BUFFER_SIZE);
 	return server;
 }
 
@@ -103,8 +105,8 @@ char * MyExampleInterface_impl::removeQuestion(short index)
 	}
 
 	// Response message to client
-	char * server = CORBA::string_alloc(1024);
-	strncpy(server, response.c_str(), 1024);
+	char * server = CORBA::string_alloc(RESPONSE_BUFFER_SIZE);
+	strncpy(server, response.c_str(), RESPONSE_BUFFER_SIZE);
 	return server;
 }
 
@@ -115,7 +117,7 @@ char * MyExampleInterface_impl::displayAllQuestions()
 {
 
 	// Initialize response message
-	string response = "\n";
+	string response = "\nAvailable Questions:\n";
 
 	// Check size of questions
 	int i, size = questions.size();
@@ -127,9 +129,9 @@ char * MyExampleInterface_impl::displayAllQuestions()
 	}
 
 	// Construct CORBA friendly return message
-	char * server = CORBA::string_alloc(1024);
+	char * server = CORBA::string_alloc(RESPONSE_BUFFER_SIZE);
 	// Convert response to (char *) and set to server
-	strncpy(server, response.c_str(), 1024); 
+	strncpy(server, response.c_str(), RESPONSE_BUFFER_SIZE); 
 
 	return server;
 }

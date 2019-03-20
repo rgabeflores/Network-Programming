@@ -131,6 +131,10 @@ int main(int argc, char ** argv)
 					cout << endl << endl;
 				}
 				else if (choice == 2){
+					
+					server = service_server->displayAllQuestions();
+					displayResponse(server);
+					
 					// Get index of question to remove from user
 					int n;
 					cout << "Enter the number of the question to remove: ";
