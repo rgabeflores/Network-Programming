@@ -12,7 +12,7 @@ LIBS=-L$(OMNIORB_HOME)/lib -lomnithread -lomniORB4
 IDL_FILE = ../example.idl
 
 .PHONY: all
-all: server client
+all: server client client2
 
 server: server.o MyExampleInterface_impl.o exampleSK.o
 	$(CXX) -o $@ $^ $(LIBS)
@@ -22,6 +22,9 @@ server.o: server.cpp MyExampleInterface_impl.h
 MyExampleInterface_impl.h: example.hh
 
 client: client.o exampleSK.o
+	$(CXX) -o $@ $^ $(LIBS)
+
+client2: client2.o exampleSK.o
 	$(CXX) -o $@ $^ $(LIBS)
 
 MyExampleInterface_impl.o: MyExampleInterface_impl.cpp MyExampleInterface_impl.h example.hh
