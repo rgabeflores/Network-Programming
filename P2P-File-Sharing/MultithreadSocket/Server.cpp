@@ -11,14 +11,17 @@
 #include <stdlib.h>
 #include <string>
 #include <pthread.h>
+#include <fstream>
 using namespace std;
 
-void *task1(void *);
+void *join(void *);
 
 static int connFd;
 
 int main(int argc, char* argv[])
 {
+    string FILES_LOCATION = "/home/cecs326/Desktop/CECS327/MultithreadSocket/Stored";
+
     int pId, portNo, listenFd;
     socklen_t len; //store size of the address
     bool loop = false;
@@ -87,7 +90,7 @@ int main(int argc, char* argv[])
             cout << "Connection successful" << endl;
         }
         
-        pthread_create(&threadA[noThread], NULL, task1, NULL); 
+        pthread_create(&threadA[noThread], NULL, join, NULL); 
         
         noThread++;
     }
@@ -100,7 +103,28 @@ int main(int argc, char* argv[])
     
 }
 
-void *task1 (void *dummyPt)
+void *join (void *dummyPt)
+{
+    cout << "Thread No: " << pthread_self() << endl;
+    char test[300];
+    bzero(test, 300);
+    bool loop = false;
+    int counter = 200;
+    while(counter > 0)
+    {    
+        bzero(test, 300);
+        
+        
+        read(connFd, test, 300);
+        
+        string tester (test);
+        cout << tester << endl;
+        
+    }
+    cout << "\nClosing thread and conn" << endl;
+    close(connFd);
+}
+void *publish (void *dummyPt)
 {
     cout << "Thread No: " << pthread_self() << endl;
     char test[300];
@@ -122,4 +146,27 @@ void *task1 (void *dummyPt)
     }
     cout << "\nClosing thread and conn" << endl;
     close(connFd);
+}
+void *search (void *dummyPt)
+{
+    cout << "Thread No: " << pthread_self() << endl;
+    char filename[300];
+    bzero(filename, 300);
+        
+    read(connFd, filename, 300);
+        
+    string filenameString (filename);
+    
+    cout << filenameString << endl;
+    ofstream file (filenameString);
+    if(file.is_open())
+    {
+	cout<< filenameString << " exists"<<endl;
+	cout<< "It exists at: " << FILES_LOCATION<<endl;
+
+    }
+    else 
+    {
+	cout<<"File not found"<<endl;
+    }
 }
