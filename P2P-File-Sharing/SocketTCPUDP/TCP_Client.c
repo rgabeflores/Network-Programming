@@ -13,12 +13,11 @@
 
 void * TCP_CALL(){
 
-	int sockfd_TCP, rv; 
+	int sockfd_TCP, rc; 
 	char buffer[MAXLINE]; 
-	char* message = "Hello Server"; 
-
 	struct sockaddr_in servaddr;
-
+	char* message = "Hello Server"; 
+	
 	// Creating socket file descriptor 
 	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
 		printf("socket creation failed"); 
@@ -41,14 +40,14 @@ void * TCP_CALL(){
 	// Send Initial TCP Message
 	memset(buffer, 0, sizeof(buffer)); 
 	strcpy(buffer, message); 
-	rv = write(sockfd_TCP, buffer, sizeof(buffer));
-	if (rv < 0) printf("\nThere was an error.\n");
+	rc = write(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error sending.\n");
 
 	// Receive Response from Server
 	printf("Message from server: "); 
-	rv = read(sockfd_TCP, buffer, sizeof(buffer));
-
-	if (rv < 0) printf("\nThere was an error.\n");
+	rc = read(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error receiving.\n");
+	
 	puts(buffer); 
 	close(sockfd_TCP);
 }
@@ -86,11 +85,9 @@ void * UDP_CALL(){
 	}
 }
 
-int main() 
-{ 
+int main(){ 
 
 	int rc;
-	
 	pthread_t thread_array[NUM_THREADS];
 	pthread_attr_t attr;
 
@@ -98,13 +95,12 @@ int main()
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
 	rc = pthread_create(&thread_array[0], NULL, TCP_CALL, (void*) NULL);
-	if(rc != 0) printf("There was a problem.");
+	if(rc != 0) printf("There was a problem initializing the TCP connection.");
 
 	rc = pthread_create(&thread_array[1], NULL, UDP_CALL, (void*) NULL);
-	if(rc != 0) printf("There was a problem.");
+	if(rc != 0) printf("There was a problem initializing the UDP messages.");
 	
 	for(int i = 0;i<2;i++){
 		pthread_join(thread_array[i],NULL);
 	}
-
 } 
