@@ -18,6 +18,11 @@ int max(int x, int y)
 	else
 		return y; 
 } 
+
+/*
+	TO-DO:
+		- Search for file location on request
+*/
 int main() 
 { 
 	int listenfd, connfd, udpfd, nready, maxfdp1; 
