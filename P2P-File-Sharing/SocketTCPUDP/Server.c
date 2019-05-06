@@ -15,7 +15,7 @@
 #define MAXLINE 1024 
 #define MAXCLIENT 3
 
-string database[100];
+char* database[100];
 int id_database[100];
 int top_of_database = 0;
 
@@ -27,7 +27,7 @@ int max(int x, int y)
 		return y; 
 }
 
-int search(string filename)
+int search(char* filename)
 {
 	int resultIndex = -1;	
 	
