@@ -8,25 +8,50 @@
 #include <strings.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
-#include <unistd.h> 
+#include <unistd.h>
+#include <dirent.h>
+#include <vector>
+ 
 #define PORT 5000 
 #define MAXLINE 1024 
+#define MAXCLIENT 3
+
+string database[100];
+int id_database[100];
+int top_of_database = 0;
+
 int max(int x, int y) 
 { 
 	if (x > y) 
 		return x; 
 	else
 		return y; 
-} 
+}
 
-/*
-	TO-DO:
-		- Search for file location on request
-*/
+int search(string filename)
+{
+	int resultIndex = -1;	
+	
+	for(int i=top_of_database;i>-1;i--)
+	{
+		if(strcmp(filename,database[i])==0){
+			resultIndex = i;
+		}
+	}
+	return resultIndex;
+}
+ 
 int main() 
 { 
+
+	int tempIndex = 0;
+
 	int listenfd, connfd, udpfd, nready, maxfdp1; 
-	char buffer[MAXLINE]; 
+	char buffer[MAXLINE];
+	
+	int clientID[MAXCLIENT];
+	int currentClientID = 0;
+ 
 	pid_t childpid; 
 	fd_set rset; 
 	ssize_t n; 
@@ -35,6 +60,7 @@ int main()
 	struct sockaddr_in cliaddr, servaddr; 
 	char* message = "Hello Client"; 
 	void sig_chld(int); 
+	int timer = 0;
 
 	/* create listening TCP socket */
 	listenfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -90,9 +116,20 @@ int main()
 			printf("\nMessage from UDP client: "); 
 			n = recvfrom(udpfd, buffer, sizeof(buffer), 0, 
 						(struct sockaddr*)&cliaddr, &len); 
-			puts(buffer); 
+			puts(buffer);
+			tempIndex = search(buffer);
+			if(tempIndex == -1)
+			{
+				printf("\nFile not found"); 
+			}
 			//sendto(udpfd, (const char*)message, sizeof(buffer), 0, 
 			//	(struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
 		} 
+		sleep(1);
+		timer++;
+		if(timer == 200){
+			close(udpfd);
+		}
+		tempIndex = 0;
 	} 
 } 
