@@ -10,7 +10,6 @@
 #include <sys/types.h> 
 #include <unistd.h>
 #include <dirent.h>
-#include <vector>
  
 #define PORT 5000 
 #define MAXLINE 1024 
