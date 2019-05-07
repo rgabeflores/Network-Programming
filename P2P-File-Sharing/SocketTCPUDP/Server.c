@@ -58,9 +58,12 @@ int main()
 	socklen_t len; 
 	const int on = 1; 
 	struct sockaddr_in cliaddr, servaddr; 
-	char* message = "Hello Client"; 
+	char* message = "File found"; 
+	char* message2 = "At index: ";
+	char* filename1[50];
 	void sig_chld(int); 
 	int timer = 0;
+	int indexT = 0;
 
 	/* create listening TCP socket */
 	listenfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -106,11 +109,16 @@ int main()
 				
 				int test1 = buffer - '0';
 
-				if(test1 == "11"){
-					printf("ding");
+				if(test1 == "1"){
+					read(connfd, buffer, sizeof(buffer)); 
+					strcpy(filename1,buffer);
+					indexT = search(filename1);
+					write(connfd, (const char*)message, sizeof(buffer)); 
+					strcat(message2, indexT);
+					write(connfd, (const char*)message2, sizeof(buffer));
 				}
 				
-				write(connfd, (const char*)message, sizeof(buffer)); 
+				
 				close(connfd); 
 				exit(0); 
 			} 

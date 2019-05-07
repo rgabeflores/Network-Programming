@@ -78,16 +78,30 @@ void TCP_SEARCH()
 
 		printf("\n Error : Connect Failed \n"); 
 	} 
+	int x = Menu();
+	char x1[1];
+	char f1[50];
+	sprintf(x1, "%f", x);	
+	
+	if(x==1){
 
 	memset(buffer, 0, sizeof(buffer)); 
-	strcpy(buffer, "11"); 
+	strcpy(buffer, x1); 
 	write(sockfd, buffer, sizeof(buffer)); 
+
+	printf("\nEnter filename");
+	gets(f1);
+	strcpy(buffer,f1);
+	write(sockfd, buffer, sizeof(buffer)); 
+	
 	printf("\nMessage from server: "); 
 	read(sockfd, buffer, sizeof(buffer)); 
 	puts(buffer); 
 
 	//broadcastSearch(10);
 	
+
+	}
 	close(sockfd);
 }
 
@@ -182,9 +196,8 @@ int Menu()
 {
 	int selection = 0;
 	printf("\nEnter your selection:");
-	printf("\nEnter your selection:");
-	printf("\n2: Search for files");
-	printf("\nEnter your selection:");
+	printf("\n1: Search for files");
+	printf("\n2: Get a file");
 	selection = getchar();
 	selection -= '0';
 	printf("%d",selection);
