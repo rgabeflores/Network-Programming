@@ -9,7 +9,7 @@
 #include <sys/socket.h> 
 #include <sys/types.h> 
 #include <unistd.h>
-#include <dirent.h>
+#include "Server.h"
  
 #define PORT 5000 
 #define MAXLINE 1024 
@@ -19,13 +19,14 @@ char* database[100];
 int id_database[100];
 int top_of_database = 0;
 
+
 int max(int x, int y) 
 { 
 	if (x > y) 
 		return x; 
 	else
 		return y; 
-}
+} 
 
 int search(char* filename)
 {
@@ -43,7 +44,7 @@ int search(char* filename)
 int main() 
 { 
 
-	int tempIndex = 0;
+	int tempIndex = -1;
 
 	int listenfd, connfd, udpfd, nready, maxfdp1; 
 	char buffer[MAXLINE];
@@ -101,7 +102,14 @@ int main()
 				bzero(buffer, sizeof(buffer)); 
 				printf("Message From TCP client: "); 
 				read(connfd, buffer, sizeof(buffer)); 
-				puts(buffer); 
+				puts(buffer);
+				
+				int test1 = buffer - '0';
+
+				if(test1 == "11"){
+					printf("ding");
+				}
+				
 				write(connfd, (const char*)message, sizeof(buffer)); 
 				close(connfd); 
 				exit(0); 
@@ -129,6 +137,6 @@ int main()
 		if(timer == 200){
 			close(udpfd);
 		}
-		tempIndex = 0;
+		tempIndex = -1;
 	} 
-} 
+}

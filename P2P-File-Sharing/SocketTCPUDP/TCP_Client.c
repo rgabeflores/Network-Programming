@@ -7,177 +7,214 @@
 #include <sys/types.h> 
 #include <pthread.h>
 #include <unistd.h>
-#define NUM_THREADS 2
+#include "Client.h"
+#define NUM_THREADS 3
 #define PORT 5000 
-#define MAXLINE 1024
+#define MAXLINE 1024 
 
+int ID = -1;
+char* fileList[2] = {"a.txt","b.txt"};
 
-/*
-	Thread for registration and file location requests to the server
-	and file requests to a client.
-*/
-void * TCP_CALL(){
-
-	// Registration
-
-	int sockfd_TCP, rc; 
+void TCP_CALL()
+{
+	int sockfd; 
 	char buffer[MAXLINE]; 
+	char* message = "Hello TCP"; 
+
 	struct sockaddr_in servaddr;
-	char* message = "Hello Server"; 
-	
+
+
+
 	// Creating socket file descriptor 
-	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
 		printf("socket creation failed"); 
 		exit(0); 
 	} 
 
 	memset(&servaddr, 0, sizeof(servaddr)); 
 
-	// Filling server address information
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 
-	// Establish Connection to Destination TCP Port
-	if (connect(sockfd_TCP, (struct sockaddr*)&servaddr, 
+	if (connect(sockfd, (struct sockaddr*)&servaddr, 
 							sizeof(servaddr)) < 0) { 
 		printf("\n Error : Connect Failed \n"); 
 	} 
 
-	// Send Initial TCP Message
 	memset(buffer, 0, sizeof(buffer)); 
-	strcpy(buffer, message); 
-	rc = write(sockfd_TCP, buffer, sizeof(buffer));
-	if (rc < 0) printf("\nThere was an error sending.\n");
-
-	// Receive Response from Server
-	printf("Message from server: "); 
-	rc = read(sockfd_TCP, buffer, sizeof(buffer));
-	if (rc < 0) printf("\nThere was an error receiving.\n");
-	
+	strcpy(buffer, "Hello Server TCP"); 
+	write(sockfd, buffer, sizeof(buffer)); 
+	printf("\nMessage from server: "); 
+	read(sockfd, buffer, sizeof(buffer)); 
 	puts(buffer); 
-	close(sockfd_TCP);
-
-	/*
-		TO-DO:
-			- File Location Request
-				- Listen to User input for file request (infinite for loop)
-				- TCP connection with server to get location (ID)
-
-			- File Request
-				- Broadcast UDP to find client with ID
-				- TCP connection to another client
-						servaddr.sin_addr.s_addr = inet_addr(<CLIENT ADDRESS>); 
-	*/
-
+	close(sockfd);
 }
 
-/*
-	Thread for listening to file requests from other clients.
-*/
-void * TCP_RECEIVE(){
-	int sockfd_TCP, rc; 
+void TCP_SEARCH()
+{
+	int sockfd; 
 	char buffer[MAXLINE]; 
+	//char* message = filename; 
+
 	struct sockaddr_in servaddr;
-	char* message = "Hello Server"; 
-	
+
+
+
 	// Creating socket file descriptor 
-	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
 		printf("socket creation failed"); 
 		exit(0); 
 	} 
 
 	memset(&servaddr, 0, sizeof(servaddr)); 
 
-	// Filling server address information
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 
-	// binding server addr structure to listenfd 
-	bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
-	listen(listenfd, 10); 
+	if (connect(sockfd, (struct sockaddr*)&servaddr, 
+							sizeof(servaddr)) < 0) { 
 
-	/*
-		TO-DO:
-			- Handle Broadcast search from other client
-			- Handle file request (responding with the file)
+		printf("\n Error : Connect Failed \n"); 
+	} 
 
-		// set listenfd and udpfd in readset 
-		FD_SET(listenfd, &rset); 
-
-		// if tcp socket is readable then handle 
-		// it by accepting the connection 
-		if (FD_ISSET(listenfd, &rset)) { 
-			len = sizeof(cliaddr); 
-			connfd = accept(listenfd, (struct sockaddr*)&cliaddr, &len); 
-			if ((childpid = fork()) == 0) { 
-				close(listenfd); 
-				bzero(buffer, sizeof(buffer)); 
-				printf("Message From TCP client: "); 
-				read(connfd, buffer, sizeof(buffer)); 
-				puts(buffer); 
-				write(connfd, (const char*)message, sizeof(buffer)); 
-				close(connfd); 
-				exit(0); 
-			} 
-			close(connfd); 
-		} 
-	*/
-	
+	memset(buffer, 0, sizeof(buffer)); 
+	strcpy(buffer, "11"); 
+	write(sockfd, buffer, sizeof(buffer)); 
+	printf("\nMessage from server: "); 
+	read(sockfd, buffer, sizeof(buffer)); 
 	puts(buffer); 
-	close(sockfd_TCP);
+
+	//broadcastSearch(10);
+	
+	close(sockfd);
 }
 
-void * UDP_CALL(){
+void UDP_HELLO(){
+	
+	int selection = 0;
+	char fileN[100];
 
+	int sockfd;
 	int sockfd_UDP;
-	// char UDPbuffer[MAXLINE]; 
+	char UDPbuffer[MAXLINE]; 
 	struct sockaddr_in servaddr;
-	char* message = "Hello Server UDP"; 
 
 	if ((sockfd_UDP = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { 
 		printf("UDP socket creation failed"); 
 		exit(0); 
 	} 
+
+	char* message1 = "HELLO";
 	
 	memset(&servaddr, 0, sizeof(servaddr)); 
 
-	// Filling server address information 
+	// Filling server information 
+	servaddr.sin_family = AF_INET; 
+	servaddr.sin_port = htons(PORT); 
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+	/*
+	sendto(sockfd_UDP, (const char*)message1, strlen(message1), 
+		0, (const struct sockaddr*)&servaddr, 
+		sizeof(servaddr)); 
+	*/
+
+	//selection = Menu();
+	if(selection == 2){
+		
+		printf("\nSearching");
+	}
+	
+	for(;;){
+		sleep(60);		
+		sendto(sockfd_UDP, (const char*)message1, strlen(message1), 
+		0, (const struct sockaddr*)&servaddr, 
+		sizeof(servaddr)); 
+		
+		
+	}
+	//0, filename
+}
+
+void UDP_SEARCH(char* filename){
+	
+
+	int sockfd;
+	int sockfd_UDP;
+	char UDPbuffer[MAXLINE]; 
+	struct sockaddr_in servaddr;
+
+	if ((sockfd_UDP = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { 
+		printf("UDP socket creation failed"); 
+		exit(0); 
+	} 
+
+	char* message1 = filename; 
+	
+	memset(&servaddr, 0, sizeof(servaddr)); 
+
+	// Filling server information 
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 
-	// Send Initial UDP Message
-	sendto(sockfd_UDP, (const char*)message, strlen(message), 
+	sendto(sockfd_UDP, (const char*)message1, strlen(message1), 
 		0, (const struct sockaddr*)&servaddr, 
 		sizeof(servaddr)); 
+}
 
-	// Send UDP Hello every 5 seconds
-	for(;;){
-		sleep(5);		
-		sendto(sockfd_UDP, (const char*)message, strlen(message), 
-		0, (const struct sockaddr*)&servaddr, 
-		sizeof(servaddr)); 
+void UDP_fetch(int clientID_Send, int clientID_Receive, char* filename)
+{
+	if(ID == clientID_Send)
+	{
+		for(int i=0;i<(sizeof(fileList)/sizeof(char*));i++)
+		{
+			if(strcmp(fileList[i],filename)==0)
+			{
+				printf("\nSending %s to client %d",fileList[i], clientID_Receive);
+			}
+		}
 	}
 }
 
-int main(){ 
+int Menu()
+{
+	int selection = 0;
+	printf("\nEnter your selection:");
+	printf("\nEnter your selection:");
+	printf("\n2: Search for files");
+	printf("\nEnter your selection:");
+	selection = getchar();
+	selection -= '0';
+	printf("%d",selection);
+	return selection;
+}
+
+
+int main() 
+{ 
+
+
 
 	int rc;
+	int i;
+	
 	pthread_t thread_array[NUM_THREADS];
 	pthread_attr_t attr;
 
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-	rc = pthread_create(&thread_array[0], NULL, TCP_CALL, (void*) NULL);
-	if(rc != 0) printf("There was a problem initializing the TCP connection.");
-
-	rc = pthread_create(&thread_array[1], NULL, UDP_CALL, (void*) NULL);
-	if(rc != 0) printf("There was a problem initializing the UDP messages.");
+	rc = pthread_create(&thread_array[0], NULL, TCP_SEARCH, (void*) NULL);
+	rc = pthread_create(&thread_array[1], NULL, UDP_HELLO, (void*) NULL);
+	rc = pthread_create(&thread_array[1], NULL, broadcastListen, (void*) NULL);
 	
-	for(int i = 0;i<2;i++){
+	for(int i = 0;i<3;i++){
 		pthread_join(thread_array[i],NULL);
 	}
+
+	
+	
+	 
 } 
