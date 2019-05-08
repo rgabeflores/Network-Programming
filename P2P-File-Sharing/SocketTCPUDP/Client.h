@@ -8,7 +8,107 @@
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
 
-#define PORT 65432
+#define PORT 5000
+#define MAXLINE 1024 
+#define MAXRECVSTRING 255
+#define IPADDRESS "127.0.0.1"
+
+int ID;
+
+int registration();
+void * broadcastSearch(int ID);
+void * broadcastListen();
+void * requestFile();
+
+/**
+	Register with the server.
+*/
+int registration(){
+	int sockfd_TCP, rc; 
+	char buffer[MAXLINE]; 
+	struct sockaddr_in servaddr;
+	char* message = "0, file1.txt"; // Name of file to register
+	
+	// Creating socket file descriptor 
+	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
+		printf("socket creation failed"); 
+		exit(0); 
+	} 
+
+	memset(&servaddr, 0, sizeof(servaddr)); 
+
+	// Filling server address information
+	servaddr.sin_family = AF_INET; 
+	servaddr.sin_port = htons(PORT); 
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+
+	// Establish Connection to Destination TCP Port
+	if (connect(sockfd_TCP, (struct sockaddr*)&servaddr, 
+							sizeof(servaddr)) < 0) { 
+		printf("\n Error : Connect Failed \n"); 
+	} 
+
+	// Send Initial TCP Message
+	memset(buffer, 0, sizeof(buffer)); 
+	strcpy(buffer, message); 
+	rc = write(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error sending.\n");
+
+	// Receive Response from Server
+	printf("Message from server: "); 
+	rc = read(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error receiving.\n");
+	
+	puts(buffer);
+	ID = atoi(buffer);
+
+	close(sockfd_TCP);
+
+	return ID;
+}
+void * requestFile(){
+
+	int sockfd_TCP, rc; 
+	char buffer[MAXLINE]; 
+	struct sockaddr_in servaddr;
+	char* message = "1, file2.txt"; // Name of file to request
+	
+	// Creating socket file descriptor 
+	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
+		printf("socket creation failed"); 
+		exit(0); 
+	} 
+
+	memset(&servaddr, 0, sizeof(servaddr)); 
+
+	// Filling server address information
+	servaddr.sin_family = AF_INET; 
+	servaddr.sin_port = htons(PORT); 
+	servaddr.sin_addr.s_addr = inet_addr(IPADDRESS); 
+
+	// Establish Connection to Destination TCP Port
+	if (connect(sockfd_TCP, (struct sockaddr*)&servaddr, 
+							sizeof(servaddr)) < 0) { 
+		printf("\n Error : Connect Failed \n"); 
+	} 
+
+	// Send Initial TCP Message
+	memset(buffer, 0, sizeof(buffer)); 
+	strcpy(buffer, message); 
+	rc = write(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error sending.\n");
+
+	// Receive Response from Server
+	printf("Message from server: "); 
+	rc = read(sockfd_TCP, buffer, sizeof(buffer));
+	if (rc < 0) printf("\nThere was an error receiving.\n");
+	
+	puts(buffer);
+	ID = atoi(buffer);
+	close(sockfd_TCP);
+
+	broadcastSearch(ID);
+}
 
 void * broadcastSearch(int ID){
 	int sock;                         /* Socket */
@@ -19,7 +119,7 @@ void * broadcastSearch(int ID){
     int broadcastPermission;          /* Socket opt to set permission to broadcast */
     unsigned int sendStringLen;       /* Length of string to broadcast */
 
-    broadcastIP = "127.0.0.1";            /* First arg:  broadcast IP address */ 
+    broadcastIP = IPADDRESS;            /* First arg:  broadcast IP address */ 
     broadcastPort = PORT;    /* Second arg:  broadcast port */
     sendString = ID + '0';             /* Third arg:  string to broadcast */
 
@@ -98,6 +198,9 @@ void * broadcastListen(){
        
        recvString[recvStringLen] = '\0';
        printf("Received: %s\n", recvString);    /* Print the received string */
+
+       // Return a message to broadcaster
+       sendto(sock, recvString, MAXRECVSTRING, 0, NULL, 0);
        close(sock);
        sleep(5);
    }

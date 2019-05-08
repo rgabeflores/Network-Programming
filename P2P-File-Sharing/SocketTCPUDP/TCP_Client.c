@@ -7,10 +7,14 @@
 #include <sys/types.h> 
 #include <pthread.h>
 #include <unistd.h>
+
+#include "Client.h"
+
 #define NUM_THREADS 2
 #define PORT 5000 
 #define MAXLINE 1024
 
+int ID;
 
 /*
 	Thread for registration and file location requests to the server
@@ -19,11 +23,10 @@
 void * TCP_CALL(){
 
 	// Registration
-
 	int sockfd_TCP, rc; 
 	char buffer[MAXLINE]; 
 	struct sockaddr_in servaddr;
-	char* message = "Hello Server"; 
+	char* message = "0,file2.txt"; // Name of file to register
 	
 	// Creating socket file descriptor 
 	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
@@ -55,7 +58,8 @@ void * TCP_CALL(){
 	rc = read(sockfd_TCP, buffer, sizeof(buffer));
 	if (rc < 0) printf("\nThere was an error receiving.\n");
 	
-	puts(buffer); 
+	puts(buffer);
+
 	close(sockfd_TCP);
 
 	/*
@@ -72,69 +76,12 @@ void * TCP_CALL(){
 
 }
 
-/*
-	Thread for listening to file requests from other clients.
-*/
-void * TCP_RECEIVE(){
-	int sockfd_TCP, rc; 
-	char buffer[MAXLINE]; 
-	struct sockaddr_in servaddr;
-	char* message = "Hello Server"; 
-	
-	// Creating socket file descriptor 
-	if ((sockfd_TCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
-		printf("socket creation failed"); 
-		exit(0); 
-	} 
-
-	memset(&servaddr, 0, sizeof(servaddr)); 
-
-	// Filling server address information
-	servaddr.sin_family = AF_INET; 
-	servaddr.sin_port = htons(PORT); 
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-
-	// binding server addr structure to listenfd 
-	bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
-	listen(listenfd, 10); 
-
-	/*
-		TO-DO:
-			- Handle Broadcast search from other client
-			- Handle file request (responding with the file)
-
-		// set listenfd and udpfd in readset 
-		FD_SET(listenfd, &rset); 
-
-		// if tcp socket is readable then handle 
-		// it by accepting the connection 
-		if (FD_ISSET(listenfd, &rset)) { 
-			len = sizeof(cliaddr); 
-			connfd = accept(listenfd, (struct sockaddr*)&cliaddr, &len); 
-			if ((childpid = fork()) == 0) { 
-				close(listenfd); 
-				bzero(buffer, sizeof(buffer)); 
-				printf("Message From TCP client: "); 
-				read(connfd, buffer, sizeof(buffer)); 
-				puts(buffer); 
-				write(connfd, (const char*)message, sizeof(buffer)); 
-				close(connfd); 
-				exit(0); 
-			} 
-			close(connfd); 
-		} 
-	*/
-	
-	puts(buffer); 
-	close(sockfd_TCP);
-}
-
 void * UDP_CALL(){
 
 	int sockfd_UDP;
-	// char UDPbuffer[MAXLINE]; 
 	struct sockaddr_in servaddr;
-	char* message = "Hello Server UDP"; 
+	// char* message = ID + '0';
+	char * message = "Hello"; 
 
 	if ((sockfd_UDP = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { 
 		printf("UDP socket creation failed"); 
@@ -171,7 +118,7 @@ int main(){
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-	rc = pthread_create(&thread_array[0], NULL, TCP_CALL, (void*) NULL);
+	rc = pthread_create(&thread_array[0], NULL, requestFile, (void*) NULL);
 	if(rc != 0) printf("There was a problem initializing the TCP connection.");
 
 	rc = pthread_create(&thread_array[1], NULL, UDP_CALL, (void*) NULL);
