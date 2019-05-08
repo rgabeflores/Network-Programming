@@ -10,6 +10,7 @@
 #include <sys/types.h> 
 #include <unistd.h>
 #include <dirent.h>
+#include "Server.h"
  
 #define PORT 5000 
 #define MAXLINE 1024 
@@ -18,32 +19,9 @@
 char* database[100];
 int id_database[100];
 int top_of_database = 0;
-
-int max(int x, int y) 
-{ 
-	if (x > y) 
-		return x; 
-	else
-		return y; 
-}
-
-int search(char* filename)
-{
-	int resultIndex = -1;	
-	
-	for(int i=top_of_database;i>-1;i--)
-	{
-		if(strcmp(filename,database[i])==0){
-			resultIndex = i;
-		}
-	}
-	return resultIndex;
-}
  
 int main() 
 { 
-
-	int tempIndex = 0;
 
 	int listenfd, connfd, udpfd, nready, maxfdp1; 
 	char buffer[MAXLINE];
@@ -55,14 +33,17 @@ int main()
 	fd_set rset; 
 	ssize_t n; 
 	socklen_t len; 
-	const int on = 1; 
+	// const int on = 1; 
 	struct sockaddr_in cliaddr, servaddr; 
 	char* message = "Hello Client"; 
 	void sig_chld(int); 
-	int timer = 0;
+	// int timer = 0;
 
 	/* create listening TCP socket */
 	listenfd = socket(AF_INET, SOCK_STREAM, 0); 
+	/* create UDP socket */
+	udpfd = socket(AF_INET, SOCK_DGRAM, 0); 
+
 	bzero(&servaddr, sizeof(servaddr)); 
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY); 
@@ -72,8 +53,6 @@ int main()
 	bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
 	listen(listenfd, 10); 
 
-	/* create UDP socket */
-	udpfd = socket(AF_INET, SOCK_DGRAM, 0); 
 	// binding server addr structure to udp sockfd 
 	bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
 
@@ -101,7 +80,45 @@ int main()
 				bzero(buffer, sizeof(buffer)); 
 				printf("Message From TCP client: "); 
 				read(connfd, buffer, sizeof(buffer)); 
-				puts(buffer); 
+				puts(buffer);
+
+				// Get request type
+				int request, locationID;
+				char * returnMessage;
+				char * filename;
+
+				request = parseRequest(buffer);
+				printf("%d\n", request);
+
+				if(request == 0){
+					printf("Registering the file...\n");
+					filename = getFileRequested(buffer);
+
+					// Register file and return ID
+					locationID = saveEntry(filename);
+					
+					if(locationID >= 0){
+						sprintf(returnMessage, "%d", locationID);
+						write(connfd, (const char*)returnMessage, sizeof(buffer));
+						close(connfd);
+						exit(0);
+					}
+				}
+				else if(request == 1){
+					printf("Finding the file...\n");
+					filename = getFileRequested(buffer);
+
+					// Find file and return ID
+					locationID = findEntry(filename);
+					
+					if(locationID >= 0){
+						sprintf(returnMessage, "%d", locationID);
+						write(connfd, (const char*)returnMessage, sizeof(buffer));
+						close(connfd);
+						exit(0);
+					}
+				}
+
 				write(connfd, (const char*)message, sizeof(buffer)); 
 				close(connfd); 
 				exit(0); 
@@ -116,19 +133,7 @@ int main()
 			n = recvfrom(udpfd, buffer, sizeof(buffer), 0, 
 						(struct sockaddr*)&cliaddr, &len); 
 			puts(buffer);
-			tempIndex = search(buffer);
-			if(tempIndex == -1)
-			{
-				printf("\nFile not found"); 
-			}
-			//sendto(udpfd, (const char*)message, sizeof(buffer), 0, 
-			//	(struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
+			
 		} 
-		sleep(1);
-		timer++;
-		if(timer == 200){
-			close(udpfd);
-		}
-		tempIndex = 0;
 	} 
 } 

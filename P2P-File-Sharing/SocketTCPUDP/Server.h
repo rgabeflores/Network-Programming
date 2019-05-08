@@ -5,6 +5,11 @@
 
 #define NUM_NODES 10
 
+struct request{
+	int type;
+	char * filename;
+};
+
 struct entry {
 	int id;
 	char * filename;
@@ -18,8 +23,10 @@ int entry_count = 0;
 */
 struct entry createEntry(int ID, char * filename){
 	struct entry newEntry;
+	char * s;
+	strcpy(s, filename);
 	newEntry.id = ID;
-	newEntry.filename = filename;
+	newEntry.filename = s;
 	return newEntry;
 }
 
@@ -45,7 +52,59 @@ int findEntry(char * filename){
 	return -1;
 }
 
+/**
+	Parses requests and returns a 0 if it's a registration request and 1 if it's a file request.
+*/
+int parseRequest(char * message){
 
+	char s[1024];
+	char seps[] = ",";
+	char* token;
+	char* values[2];
+
+	int i = 0;
+	strcpy(s, message);
+
+	token = strtok (s, seps);
+	while (token != NULL)
+	{
+		values[i++] = token;
+	    token = strtok (NULL, seps);
+	}
+	
+	if(strcmp(values[0], "0") == 0){
+		// 0 indicates registration request
+		return 0;
+	}
+	else if (strcmp(values[0], "1") == 0){
+		// 1 indicates file request
+		return 1;
+	}
+
+	// -1 indicates bad request
+	return -1;
+}
+
+char * getFileRequested(char * message){
+	char s[1024];
+	char seps[] = ",";
+	char* token;
+	char* values[2];
+	strcpy(s, message);
+
+	int i = 0;
+	token = strtok(s, seps);
+	while (token != NULL)
+	{
+		values[i++] = token;
+	    token = strtok(NULL, seps);
+	}
+	return values[1];
+}
+
+/**
+	Get the max of two integers.
+*/
 int max(int x, int y) 
 { 
 	if (x > y) 
