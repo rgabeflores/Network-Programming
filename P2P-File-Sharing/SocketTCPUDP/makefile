@@ -11,13 +11,13 @@ C = UDP_Client.o
 TCP_Client: $A
 	$(CC1) -o TCP_Client $A
 
-TCP_Client.o: TCP_Client.c
+TCP_Client.o: TCP_Client.c Client.h
 	$(CC1) -c TCP_Client.c
 
 Server: $B
 	$(CC1) -o Server $B
 
-Server.o: Server.c
+Server.o: Server.c Server.h
 	$(CC1) -c Server.c
 
 UDP_Client: $C
@@ -25,6 +25,10 @@ UDP_Client: $C
 
 UDP_Client.o: UDP_Client.c
 	$(CC1) -c UDP_Client.c
+
+Test: Test.c Server.h
+	$(CC1) -o Test Test.c
+
 
 clean:
 	rm *.o
